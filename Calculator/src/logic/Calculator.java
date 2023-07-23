@@ -4,7 +4,10 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 import javax.swing.*;
@@ -12,10 +15,8 @@ import javax.swing.*;
 public class Calculator extends JPanel{
 	
 	MyFrame frame;
-	
-	
-	
 	static JTextField t;
+	int currentResult = 0; 
 	
 	
 	public Calculator(MyFrame frame) {
@@ -79,16 +80,16 @@ public class Calculator extends JPanel{
 		
 	    
 	    
-	    
-	    t = new JTextField(20);
-	    t.setEditable(false);
-	    
-	    	    
-	    
 		
 	    screen.setLayout(new BorderLayout());
 		
+	    
+	    t = new JTextField();
+	    t.setEditable(false);
 	    screen.add(t,BorderLayout.CENTER);
+	    
+	    
+	    
 	    
 		
 		
@@ -105,37 +106,75 @@ public class Calculator extends JPanel{
 	
 	public void createAndAddButtons(JPanel numbers, JPanel operations) {
 		
-		//Allgemein: Setze Größe von jedem Button auf 80x50
 		
-		JButton nullButton = new JButton("0");
-		nullButton.setPreferredSize(new Dimension(80, 50));
-		JButton einsButton = new JButton("1");
-		einsButton.setPreferredSize(new Dimension(80, 50));
-		JButton zweiButton = new JButton("2");
-		zweiButton.setPreferredSize(new Dimension(80, 50));
-		JButton dreiButton = new JButton("3");
-		dreiButton.setPreferredSize(new Dimension(80, 50));
-		JButton vierButton = new JButton("4");
-		vierButton.setPreferredSize(new Dimension(80, 50)); 
-		JButton fünfButton = new JButton("5");
-		fünfButton.setPreferredSize(new Dimension(80, 50));
-		JButton sechsButton = new JButton("6");
-		sechsButton.setPreferredSize(new Dimension(80, 50));
-		JButton siebenButton = new JButton("7");
-		siebenButton.setPreferredSize(new Dimension(80, 50));
-		JButton achtButton = new JButton("8");
-		achtButton.setPreferredSize(new Dimension(80, 50));
-		JButton neunButton = new JButton("9");
-		neunButton.setPreferredSize(new Dimension(80, 50));
+		//Erstelle alle 9 Zahlen als Buttons
+		for(int i = 0; i <= 9; i++) {
+			JButton zahlButton = new JButton(Integer.toString(i));
+			zahlButton.setPreferredSize(new Dimension(80, 50)); //Größe der Buttons setzen
+			numbers.add(zahlButton);	//Zur Tastatur hinzufügen
+			
+			
+			
+			//Jedem Button eine Funktion beim Klicken geben	
+			zahlButton.addActionListener(new ActionListener() {
+
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					
+					t.setText(t.getText()+zahlButton.getText());
+					
+					
+				}
+				
+				
+				
+			});
+
+		}
+		
+		
+		//Erstelle die Operationen Buttons alle separat und setze die jeweilige Größe
 		JButton gleichButton = new JButton("=");
 		gleichButton.setPreferredSize(new Dimension(80, 50)); 
+		gleichButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				t.setText(Integer.toString(currentResult));
+			}
+			
+		});
+		
+		
 		JButton löschButton = new JButton("C");
 		löschButton.setPreferredSize(new Dimension(80, 50)); 
+		löschButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				t.setText("");
+			}
+			
+		});
+		
 		JButton kommaButton = new JButton(",");
 		kommaButton.setPreferredSize(new Dimension(80, 50));
 		
+		
 		JButton plusButton = new JButton("+");
 		plusButton.setPreferredSize(new Dimension(50, 50)); 
+		löschButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				t.setText(t.getText()+ "+");
+				
+				
+			}
+			
+		});
+		
+		
 		JButton minusButton = new JButton("-");
 		minusButton.setPreferredSize(new Dimension(50, 50)); 
 		JButton malButton = new JButton("*");
@@ -144,19 +183,9 @@ public class Calculator extends JPanel{
 
 
 		
-		numbers.add(siebenButton);
-		numbers.add(achtButton);
-		numbers.add(neunButton);
-		numbers.add(vierButton);
-		numbers.add(fünfButton);
-		numbers.add(sechsButton);
-		numbers.add(einsButton);
-		numbers.add(zweiButton);
-		numbers.add(dreiButton);
+	
 		numbers.add(kommaButton);
-		numbers.add(nullButton);
 		numbers.add(gleichButton);
-		
 		
 		operations.add(plusButton);
 		operations.add(minusButton);
