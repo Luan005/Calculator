@@ -19,6 +19,10 @@ public class Calculator extends JPanel{
 	int currentResult = 0; 
 	
 	
+	//Speichert die aktuelle Operation, sodass nach der Eingabe von 2 Zahlen die adäquate Operation ausgeführt wird
+	String currentOperation;
+	
+	
 	public Calculator(MyFrame frame) {
 		
 		this.frame = frame;
@@ -80,9 +84,10 @@ public class Calculator extends JPanel{
 		
 	    
 	    
-		
 	    screen.setLayout(new BorderLayout());
 		
+	    
+	    
 	    
 	    t = new JTextField();
 	    t.setEditable(false);
@@ -122,6 +127,11 @@ public class Calculator extends JPanel{
 				public void actionPerformed(ActionEvent e) {
 					
 					t.setText(t.getText()+zahlButton.getText());
+					currentResult+=Integer.parseInt(zahlButton.getText());
+					
+					
+					//Schriftart der Zahlenanzeige beim Screen Bold setzen und Größe ändern
+				    t.setFont(new Font("Arial", Font.BOLD, 45));
 					
 					
 				}
@@ -133,7 +143,7 @@ public class Calculator extends JPanel{
 		}
 		
 		
-		//Erstelle die Operationen Buttons alle separat und setze die jeweilige Größe
+		//Erstelle den gleich Button mit der jeweiligen Funktion
 		JButton gleichButton = new JButton("=");
 		gleichButton.setPreferredSize(new Dimension(80, 50)); 
 		gleichButton.addActionListener(new ActionListener() {
@@ -141,11 +151,19 @@ public class Calculator extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				t.setText(Integer.toString(currentResult));
+				
+				
+				
+				//Schriftart des Screens dick machen
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
 			}
 			
 		});
 		
 		
+		
+		
+		//Erstelle den lösch Button mit der jeweiligen Funktion
 		JButton löschButton = new JButton("C");
 		löschButton.setPreferredSize(new Dimension(80, 50)); 
 		löschButton.addActionListener(new ActionListener() {
@@ -153,30 +171,54 @@ public class Calculator extends JPanel{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				t.setText("");
+				
 			}
 			
 		});
 		
-		JButton kommaButton = new JButton(",");
-		kommaButton.setPreferredSize(new Dimension(80, 50));
 		
 		
+		
+		
+		//Erstelle den plus Button mit der jeweiligen Funktion
 		JButton plusButton = new JButton("+");
 		plusButton.setPreferredSize(new Dimension(50, 50)); 
-		löschButton.addActionListener(new ActionListener() {
+		plusButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				
 				t.setText(t.getText()+ "+");
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
 				
-				
+					
 			}
 			
 		});
 		
 		
+		
+		
+		//Erstelle den minus Button mit der jeweiligen Funktion
 		JButton minusButton = new JButton("-");
 		minusButton.setPreferredSize(new Dimension(50, 50)); 
+		minusButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				t.setText(t.getText()+ "-");
+				
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+				
+					
+			}
+			
+		});
+		
+		
+		
 		JButton malButton = new JButton("*");
 		malButton.setPreferredSize(new Dimension(50, 50)); 
 		JButton geteiltButton = new JButton("/");
@@ -184,8 +226,10 @@ public class Calculator extends JPanel{
 
 		
 	
-		numbers.add(kommaButton);
 		numbers.add(gleichButton);
+		numbers.add(löschButton);
+
+		
 		
 		operations.add(plusButton);
 		operations.add(minusButton);
