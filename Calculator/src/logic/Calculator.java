@@ -9,14 +9,20 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
 import javax.swing.*;
 
-public class Calculator extends JPanel{
+public class Calculator extends JPanel implements ActionListener{
 	
 	MyFrame frame;
 	static JTextField t;
 	int currentResult = 0; 
+	
+	JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bMinus, bPlus, bMultiply, bDivides, bEquals, bDelete;
+	
+	
+	
+	//s1 ist die Zahl vor der Operation, s2 ist die Zahl nach der Operation
+	String s1, s2 = "";
 	
 	
 	//Speichert die aktuelle Operation, sodass nach der Eingabe von 2 Zahlen die adäquate Operation ausgeführt wird
@@ -28,6 +34,8 @@ public class Calculator extends JPanel{
 		this.frame = frame;
 		this.setMinimumSize(new Dimension(500, 500));
 		this.setLayout(new BorderLayout());
+		
+		
 		
 		
 		
@@ -112,131 +120,180 @@ public class Calculator extends JPanel{
 	public void createAndAddButtons(JPanel numbers, JPanel operations) {
 		
 		
-		//Erstelle alle 9 Zahlen als Buttons
-		for(int i = 0; i <= 9; i++) {
-			JButton zahlButton = new JButton(Integer.toString(i));
-			zahlButton.setPreferredSize(new Dimension(80, 50)); //Größe der Buttons setzen
-			numbers.add(zahlButton);	//Zur Tastatur hinzufügen
-			
-			
-			
-			//Jedem Button eine Funktion beim Klicken geben	
-			zahlButton.addActionListener(new ActionListener() {
-
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					
-					t.setText(t.getText()+zahlButton.getText());
-					currentResult+=Integer.parseInt(zahlButton.getText());
-					
-					
-					//Schriftart der Zahlenanzeige beim Screen Bold setzen und Größe ändern
-				    t.setFont(new Font("Arial", Font.BOLD, 45));
-					
-					
-				}
-				
-				
-				
-			});
-
-		}
 		
 		
-		//Erstelle den gleich Button mit der jeweiligen Funktion
-		JButton gleichButton = new JButton("=");
-		gleichButton.setPreferredSize(new Dimension(80, 50)); 
-		gleichButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				t.setText(Integer.toString(currentResult));
-				
-				
-				
-				//Schriftart des Screens dick machen
-			    t.setFont(new Font("Arial", Font.BOLD, 45));
-			}
-			
-		});
+		b0 = new JButton("0");
+		b1 = new JButton("1");
+		b2 = new JButton("2");
+		b3 = new JButton("3");
+		b4 = new JButton("4");
+		b5 = new JButton("5");
+		b6 = new JButton("6");
+		b7 = new JButton("7");
+		b8 = new JButton("8");
+		b9 = new JButton("9");
 		
 		
 		
-		
-		//Erstelle den lösch Button mit der jeweiligen Funktion
-		JButton löschButton = new JButton("C");
-		löschButton.setPreferredSize(new Dimension(80, 50)); 
-		löschButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				t.setText("");
-				
-			}
-			
-		});
-		
-		
-		
-		
-		
-		//Erstelle den plus Button mit der jeweiligen Funktion
-		JButton plusButton = new JButton("+");
-		plusButton.setPreferredSize(new Dimension(50, 50)); 
-		plusButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				
-				t.setText(t.getText()+ "+");
-			    t.setFont(new Font("Arial", Font.BOLD, 45));
-				
-					
-			}
-			
-		});
-		
-		
-		
-		
-		//Erstelle den minus Button mit der jeweiligen Funktion
-		JButton minusButton = new JButton("-");
-		minusButton.setPreferredSize(new Dimension(50, 50)); 
-		minusButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-				t.setText(t.getText()+ "-");
-				
-			    t.setFont(new Font("Arial", Font.BOLD, 45));
-				
-					
-			}
-			
-		});
-		
-		
-		
-		JButton malButton = new JButton("*");
-		malButton.setPreferredSize(new Dimension(50, 50)); 
-		JButton geteiltButton = new JButton("/");
-
 
 		
-	
-		numbers.add(gleichButton);
-		numbers.add(löschButton);
+		bEquals = new JButton("=");
+		bEquals.setPreferredSize(new Dimension(80, 50)); 
+		bEquals.addActionListener(this);
+		
+		bDelete = new JButton("C");
+		bDelete.setPreferredSize(new Dimension(80, 50)); 
+		bDelete.addActionListener(this);
+
+		
+		bPlus = new JButton("+");
+		bPlus.setPreferredSize(new Dimension(80, 50)); 
+		bPlus.addActionListener(this);
+		
+		bMinus = new JButton("-");
+		bMinus.setPreferredSize(new Dimension(80, 50)); 
+		bMinus.addActionListener(this);
 
 		
 		
-		operations.add(plusButton);
-		operations.add(minusButton);
-		operations.add(malButton);
-		operations.add(geteiltButton);
+		bMultiply = new JButton("*");
+		bMultiply.setPreferredSize(new Dimension(80, 50)); 
+		bMultiply.addActionListener(this);
+
+		
+		bDivides = new JButton("/");
+		bDivides.setPreferredSize(new Dimension(80, 50)); 
+		bDivides.addActionListener(this);
+		
+		
+		
+		
+		
+		//Für jeden Button ActionListener hinzufügen, damit diese beim klicken reagieren
+		b0.addActionListener(this);
+		b1.addActionListener(this);
+		b2.addActionListener(this);
+		b3.addActionListener(this);
+		b4.addActionListener(this);
+		b5.addActionListener(this);
+		b6.addActionListener(this);
+		b7.addActionListener(this);
+		b8.addActionListener(this);
+		b9.addActionListener(this);
+		bEquals.addActionListener(this);
+		bDelete.addActionListener(this);
+		bPlus.addActionListener(this);
+		bMinus.addActionListener(this);
+		bMultiply.addActionListener(this);
+		bDivides.addActionListener(this);
+		
+
+
+		
+
+
+		
+		numbers.add(b0);
+		numbers.add(b1);
+		numbers.add(b2);
+		numbers.add(b3);
+		numbers.add(b4);
+		numbers.add(b5);
+		numbers.add(b6);
+		numbers.add(b7);
+		numbers.add(b8);
+		numbers.add(b9);
+
+		numbers.add(bEquals);
+		numbers.add(bDelete);
+
+		
+		
+		operations.add(bPlus);
+		operations.add(bMinus);
+		operations.add(bMultiply);
+		operations.add(bDivides);
 
 		
 	}
 
-}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+		//Zuerst gucken, was für ein Button das ist und dann adäquate Reaktion einbauen
+		
+		JButton b = (JButton) e.getSource();
+		String buttonName = b.getText();		
+		
+	
+		//Idee: Nur 2 zahlen speichern, s1 und s2. nachdem man s2 eingegeben hat, wird s1 gelöscht und s2 wird zu s1 und das spiel geht von vorne los
+			
+			switch(buttonName)  {
+			
+			case "C":
+				t.setText("");
+				currentOperation = "";
+				s1 = s2 = "";
+				break;
+				
+			case "+":
+				t.setText(t.getText()+ "+");
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    currentOperation = "+";
+			    break;
+			 
+			    
+			case "-":
+				t.setText(t.getText()+ "-");
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    currentOperation = "-";
+			    break;
+			    
+			 
+			case "*":
+				t.setText(t.getText()+ "*");
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    currentOperation = "*";
+			    break;
+			    
+			    
+			case "/":
+				t.setText(t.getText()+ "/");
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    currentOperation = "/";
+			    break;
+			    
+			    
+			
+			    
+			default:
+				t.setText(t.getText()+buttonName);
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    
+			    if(!s1.equals("")) {
+			    	s2+=buttonName;
+			    } else {
+			    	s1+=buttonName;
+			    }
+			    
+			   
+			
+			
+		}
+		
+	
+				
+				
+				
+				
+			}
+			
+			
+			
+		}
+		
+		
+	
+	
+	
