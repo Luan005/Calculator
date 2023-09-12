@@ -10,19 +10,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.*;
+import java.math.BigDecimal;
+
 
 public class Calculator extends JPanel implements ActionListener{
 	
 	MyFrame frame;
 	static JTextField t;
-	int currentResult = 0; 
+	double currentResult = 0; 
 	
-	JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bMinus, bPlus, bMultiply, bDivides, bEquals, bDelete;
+	
+	//Alle Buttons erstellen
+	JButton b0, b1, b2, b3, b4, b5, b6, b7, b8, b9, bMinus, bPlus, bMultiply, bDivides, bEquals, bDelete, bComma;
 	
 	
 	
 	//s1 ist die Zahl vor der Operation, s2 ist die Zahl nach der Operation
-	String s1, s2 = "";
+	String s1 = "";
+	String s2 = "";
 	
 	
 	//Speichert die aktuelle Operation, sodass nach der Eingabe von 2 Zahlen die adäquate Operation ausgeführt wird
@@ -37,7 +42,7 @@ public class Calculator extends JPanel implements ActionListener{
 		
 		
 		
-		
+		currentOperation = "";
 		
 //		Screen steht für die Anzeige der Zahlen, keyBoard für die Tastatur
 		JPanel screen = new JPanel();
@@ -121,7 +126,7 @@ public class Calculator extends JPanel implements ActionListener{
 		
 		
 		
-		
+		//Buttons für die Zahlen initialisieren
 		b0 = new JButton("0");
 		b1 = new JButton("1");
 		b2 = new JButton("2");
@@ -136,35 +141,28 @@ public class Calculator extends JPanel implements ActionListener{
 		
 		
 
-		
+		//Buttons für die Operationen initialisieren
 		bEquals = new JButton("=");
 		bEquals.setPreferredSize(new Dimension(80, 50)); 
-		bEquals.addActionListener(this);
 		
 		bDelete = new JButton("C");
 		bDelete.setPreferredSize(new Dimension(80, 50)); 
-		bDelete.addActionListener(this);
-
 		
 		bPlus = new JButton("+");
 		bPlus.setPreferredSize(new Dimension(80, 50)); 
-		bPlus.addActionListener(this);
 		
 		bMinus = new JButton("-");
 		bMinus.setPreferredSize(new Dimension(80, 50)); 
-		bMinus.addActionListener(this);
-
-		
 		
 		bMultiply = new JButton("*");
 		bMultiply.setPreferredSize(new Dimension(80, 50)); 
-		bMultiply.addActionListener(this);
-
+		
 		
 		bDivides = new JButton("/");
-		bDivides.setPreferredSize(new Dimension(80, 50)); 
-		bDivides.addActionListener(this);
+		bDivides.setPreferredSize(new Dimension(80, 50)); 		
 		
+		bComma = new JButton(".");
+
 		
 		
 		
@@ -187,8 +185,19 @@ public class Calculator extends JPanel implements ActionListener{
 		bMultiply.addActionListener(this);
 		bDivides.addActionListener(this);
 		
+		
+		
+		bComma.addActionListener(this);
 
+		
 
+		/*
+		 * Nächste Schritte:
+		 * 1. Delete Button für nur eine Zahl
+		 * 2. Boundary hinzufügen sodass Abstand zwischen allen buttons herrscht
+		 * 3. , Zahl einfügen
+		 * 4. Klammern machen
+		 */
 		
 
 
@@ -205,7 +214,7 @@ public class Calculator extends JPanel implements ActionListener{
 		numbers.add(b9);
 
 		numbers.add(bEquals);
-		numbers.add(bDelete);
+		numbers.add(bComma);
 
 		
 		
@@ -224,60 +233,114 @@ public class Calculator extends JPanel implements ActionListener{
 		//Zuerst gucken, was für ein Button das ist und dann adäquate Reaktion einbauen
 		
 		JButton b = (JButton) e.getSource();
-		String buttonName = b.getText();		
-		
+		String buttonName = b.getText();	
+				
 	
 		//Idee: Nur 2 zahlen speichern, s1 und s2. nachdem man s2 eingegeben hat, wird s1 gelöscht und s2 wird zu s1 und das spiel geht von vorne los
 			
+		
+			//Je nach Button wird die adäquate Operation ausgeführt
 			switch(buttonName)  {
 			
 			case "C":
-				t.setText("");
 				currentOperation = "";
+				t.setText("");
 				s1 = s2 = "";
 				break;
 				
 			case "+":
-				t.setText(t.getText()+ "+");
+			    currentOperation = "+";
+			    t.setText(t.getText().concat("+"));
 			    t.setFont(new Font("Arial", Font.BOLD, 45));
 			    currentOperation = "+";
+			    
 			    break;
 			 
 			    
 			case "-":
-				t.setText(t.getText()+ "-");
+			    currentOperation = "-";
+			    t.setText(t.getText().concat("-"));
 			    t.setFont(new Font("Arial", Font.BOLD, 45));
 			    currentOperation = "-";
 			    break;
 			    
 			 
 			case "*":
-				t.setText(t.getText()+ "*");
+			    currentOperation = "*";
+			    t.setText(t.getText().concat("*"));
 			    t.setFont(new Font("Arial", Font.BOLD, 45));
 			    currentOperation = "*";
 			    break;
 			    
 			    
 			case "/":
-				t.setText(t.getText()+ "/");
+			    currentOperation = "/";
+			    t.setText(t.getText().concat("/"));
 			    t.setFont(new Font("Arial", Font.BOLD, 45));
 			    currentOperation = "/";
+			    
 			    break;
 			    
 			    
-			
+			case "=":
+				computeResult(currentOperation);
+				
+				/*
+				 * Hier prüfe ich ob das Ergebnis eine Ganzzahl ist oder eine Kommazahl(zwischen 0 und 1 als Nachkommastelle)
+				 * Falls es eine Nachkommastelle ist, so wird diese exakt so ausgegeben.
+				 * Falls es keine Nachkommastelle ist, so wird dieses als int ausgegeben, also ohne ein Komma
+				 */
+				
+				if(currentResult % 1 == 0) {
+				    t.setText(String.valueOf((int)currentResult));
+				} else {
+					t.setText(String.valueOf(currentResult));
+				}
+				
+				
+				//Das Ergebnis wird dann in s1 gespeichert, sodass die nächste Zahl, die man eintippt, zu s2 dazugezählt wird
+			    s1 = String.valueOf(currentResult);
+			    s2 = "";
 			    
-			default:
-				t.setText(t.getText()+buttonName);
+			    
+			    //Setze das aktuelle Ergebnis wieder auf Null, um mit ihr weiterzurechnen
+			    currentResult = 0;
+			    
+			    System.out.println("S1: " + s1);
+			    System.out.println("S2: " + s2);
+
+			    break;
+			    
+			 
+			case ".":
+			    t.setText(t.getText().concat("."));
 			    t.setFont(new Font("Arial", Font.BOLD, 45));
-			    
-			    if(!s1.equals("")) {
+			    			    
+			    if(!currentOperation.equals("")) {
 			    	s2+=buttonName;
 			    } else {
 			    	s1+=buttonName;
 			    }
 			    
-			   
+			    break;
+			    
+			    
+			    
+			
+			//Der Fall, wenn keine Operation, sondern eine Zahl eingegeben wird
+			default:
+			    t.setText(t.getText().concat(buttonName));
+			    t.setFont(new Font("Arial", Font.BOLD, 45));
+			    
+			    
+			    
+			    //Wenn eine Operation eingegeben wurde: Zahl gehört zu s2, sonst zu s1
+			    if(!currentOperation.equals("")) {
+			    	s2+=buttonName;
+			    } else {
+			    	s1+=buttonName;
+			    }
+			    
 			
 			
 		}
@@ -291,7 +354,65 @@ public class Calculator extends JPanel implements ActionListener{
 			
 			
 			
+	
+
+
+	//Mit dieser Methode wird das Endergebnis je nach Operation berechnet
+	public double computeResult(String operation) {
+		
+		
+		
+		switch(currentOperation) {
+		
+		case "+":
+			
+			
+			//Speichere beide Variablen als BigDecimal Variable, damit keine langen Nachkommastellen enstehen
+			BigDecimal num1 = new BigDecimal(s1);
+	        BigDecimal num2 = new BigDecimal(s2);
+
+	        
+	        //Ergebnis der Addition der beiden Variablen
+	        BigDecimal result = num1.add(num2);
+			
+			
+	        //Wandle das aktuelle Ergebnis in eine BigDecimal um, damit das aktuelle Ergebnis mit den beiden variablen addiert werden kann
+	        BigDecimal currentResultBigDecimal = BigDecimal.valueOf(currentResult);
+	        
+	        
+	        //Addiere das aktuelle Ergebnis mit den beiden Variablen
+	        currentResultBigDecimal.add(result);
+	        
+	        
+	        //Weise das Ergebnis einer double variable zu, um diese danach der ursprünglichen currentResult Variable zuzuweisen
+	        double endResult = result.add(BigDecimal.valueOf(currentResult)).doubleValue();
+
+			currentResult = endResult;
+	        
+			break;
+			
+		case "-":
+			currentResult+=Double.parseDouble(s1)-Double.parseDouble((s2));
+			break;
+		
+		case "*":
+			currentResult+=Double.parseDouble(s1)*Double.parseDouble((s2));
+			break;
+			
+		case "/":
+			currentResult+=Double.parseDouble(s1)/Double.parseDouble((s2));
+			break;
+		
+			
+			
 		}
+		
+		t.setText(t.getText().concat(String.valueOf(currentResult)));
+		return currentResult;
+
+	
+	}
+}
 		
 		
 	
