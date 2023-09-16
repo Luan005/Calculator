@@ -74,7 +74,7 @@ public class Calculator extends JPanel implements ActionListener{
 		
 		
 		
-		//Setze das Layout für die numbers, sodass ein 3x3 Feld an Zahlen zu sehen ist
+		//Setze das Layout für die numbers, sodass ein 4x4 Feld an Zahlen zu sehen ist
         GridLayout gridLayout = new GridLayout(4, 4);
 		numbers.setLayout(gridLayout);
 		gridLayout.setHgap(5);
@@ -137,6 +137,9 @@ public class Calculator extends JPanel implements ActionListener{
 		b7 = new JButton("7");
 		b8 = new JButton("8");
 		b9 = new JButton("9");
+		
+		
+		
 		
 		
 		
